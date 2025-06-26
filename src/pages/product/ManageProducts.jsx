@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { 
   Search, 
   Filter, 
@@ -14,8 +15,11 @@ import {
   TrendingUp,
   AlertTriangle
 } from 'lucide-react';
+import { getAllProductsRequest } from '../../features/product/productSlice';
+import axios from 'axios';
 
 export default function ManageProducts() {
+  const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
@@ -24,79 +28,94 @@ export default function ManageProducts() {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [showActions, setShowActions] = useState(null);
 
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  // const { products, loading, error } = useSelector((state) => state.products);
+  const productState = useSelector((state) => state.products || {});
+  const { products = [], loading = false, error = null } = productState;
+
+  // useEffect(() => {
+  //   dispatch(getAllProductsRequest({
+  //     page: 1,
+  //     pageSize: 10,
+  //     searchTerm: "",
+  //   }));
+  // }, [dispatch]);
+
   // Sample product data
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: 'Wireless Bluetooth Headphones',
-      sku: 'WBH-001',
-      category: 'Electronics',
-      price: 129.99,
-      salePrice: 99.99,
-      stock: 45,
-      status: 'active',
-      image: 'https://via.placeholder.com/60x60/333/fff?text=H',
-      sales: 234,
-      rating: 4.5,
-      dateAdded: '2025-05-15'
-    },
-    {
-      id: 2,
-      name: 'Smart Watch Pro',
-      sku: 'SWP-002',
-      category: 'Electronics',
-      price: 299.99,
-      salePrice: null,
-      stock: 12,
-      status: 'active',
-      image: 'https://via.placeholder.com/60x60/333/fff?text=SW',
-      sales: 156,
-      rating: 4.8,
-      dateAdded: '2025-05-10'
-    },
-    {
-      id: 3,
-      name: 'Gaming Mechanical Keyboard',
-      sku: 'GMK-003',
-      category: 'Electronics',
-      price: 89.99,
-      salePrice: 79.99,
-      stock: 0,
-      status: 'inactive',
-      image: 'https://via.placeholder.com/60x60/333/fff?text=K',
-      sales: 89,
-      rating: 4.2,
-      dateAdded: '2025-04-28'
-    },
-    {
-      id: 4,
-      name: 'Premium Cotton T-Shirt',
-      sku: 'PCT-004',
-      category: 'Clothing',
-      price: 24.99,
-      salePrice: 19.99,
-      stock: 128,
-      status: 'active',
-      image: 'https://via.placeholder.com/60x60/333/fff?text=T',
-      sales: 445,
-      rating: 4.3,
-      dateAdded: '2025-05-01'
-    },
-    {
-      id: 5,
-      name: 'Professional Camera Lens',
-      sku: 'PCL-005',
-      category: 'Electronics',
-      price: 899.99,
-      salePrice: null,
-      stock: 8,
-      status: 'draft',
-      image: 'https://via.placeholder.com/60x60/333/fff?text=C',
-      sales: 23,
-      rating: 4.9,
-      dateAdded: '2025-05-20'
-    }
-  ]);
+  // const [products, setProducts] = useState([
+    // {
+    //   id: 1,
+    //   name: 'Wireless Bluetooth Headphones',
+    //   sku: 'WBH-001',
+    //   category: 'Electronics',
+    //   price: 129.99,
+    //   salePrice: 99.99,
+    //   stock: 45,
+    //   status: 'active',
+    //   image: 'https://via.placeholder.com/60x60/333/fff?text=H',
+    //   sales: 234,
+    //   rating: 4.5,
+    //   dateAdded: '2025-05-15'
+    // },
+    // {
+    //   id: 2,
+    //   name: 'Smart Watch Pro',
+    //   sku: 'SWP-002',
+    //   category: 'Electronics',
+    //   price: 299.99,
+    //   salePrice: null,
+    //   stock: 12,
+    //   status: 'active',
+    //   image: 'https://via.placeholder.com/60x60/333/fff?text=SW',
+    //   sales: 156,
+    //   rating: 4.8,
+    //   dateAdded: '2025-05-10'
+    // },
+    // {
+    //   id: 3,
+    //   name: 'Gaming Mechanical Keyboard',
+    //   sku: 'GMK-003',
+    //   category: 'Electronics',
+    //   price: 89.99,
+    //   salePrice: 79.99,
+    //   stock: 0,
+    //   status: 'inactive',
+    //   image: 'https://via.placeholder.com/60x60/333/fff?text=K',
+    //   sales: 89,
+    //   rating: 4.2,
+    //   dateAdded: '2025-04-28'
+    // },
+    // {
+    //   id: 4,
+    //   name: 'Premium Cotton T-Shirt',
+    //   sku: 'PCT-004',
+    //   category: 'Clothing',
+    //   price: 24.99,
+    //   salePrice: 19.99,
+    //   stock: 128,
+    //   status: 'active',
+    //   image: 'https://via.placeholder.com/60x60/333/fff?text=T',
+    //   sales: 445,
+    //   rating: 4.3,
+    //   dateAdded: '2025-05-01'
+    // },
+    // {
+    //   id: 5,
+    //   name: 'Professional Camera Lens',
+    //   sku: 'PCL-005',
+    //   category: 'Electronics',
+    //   price: 899.99,
+    //   salePrice: null,
+    //   stock: 8,
+    //   status: 'draft',
+    //   image: 'https://via.placeholder.com/60x60/333/fff?text=C',
+    //   sales: 23,
+    //   rating: 4.9,
+    //   dateAdded: '2025-05-20'
+    // }
+  // ]);
 
   const categories = ['Electronics', 'Clothing', 'Books', 'Home & Garden', 'Sports'];
   const statuses = ['active', 'inactive', 'draft'];
@@ -109,6 +128,47 @@ export default function ManageProducts() {
       default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
     }
   };
+
+  useEffect(() => {
+    console.log("Dispatching getAllProductsRequest...");
+    dispatch(getAllProductsRequest({
+      page: 1,
+      pageSize: 10,
+      searchTerm: ""
+    }));
+  }, [dispatch]);
+
+  //  useEffect(() => {
+  //   const fetchProducts = async () => {
+  //     try {
+  //       const token = localStorage.getItem('admin_token'); // or "admin_token" if that's what you used
+  //       const response = await axios.get('http://localhost:1001/private/get-products', {
+  //         params: {
+  //           page,
+  //           pageSize,
+  //           searchTerm
+  //         },
+  //         headers: {
+  //           'x-auth-token': token
+  //         }
+  //       });
+  //       console.log("response",response.data.data.docs)
+
+  //       setProducts(response.data.data.docs || []);
+  //     } catch (error) {
+  //       console.error('Failed to fetch products:', error);
+  //     }
+  //   };
+
+  //   fetchProducts();
+  // }, [page, pageSize, searchTerm]);
+
+  
+
+  // useEffect(() => {
+  //   setProducts(productsFromStore);
+  //   console.log(products)
+  // }, [productsFromStore]);
 
   const getStockStatus = (stock) => {
     if (stock === 0) return { color: 'text-red-400', label: 'Out of Stock' };
@@ -352,7 +412,8 @@ export default function ManageProducts() {
               </tr>
             </thead>
             <tbody>
-              {sortedProducts.map((product) => {
+              {
+              sortedProducts.map((product) => {
                 const stockStatus = getStockStatus(product.stock);
                 return (
                   <tr key={product.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
@@ -367,7 +428,7 @@ export default function ManageProducts() {
                     <td className="px-4 py-3">
                       <div className="flex items-center space-x-3">
                         <img
-                          src={product.image}
+                          src={product?.images?.[0]?.url}
                           alt={product.name}
                           className="w-12 h-12 rounded-lg object-cover bg-gray-700"
                         />
@@ -395,7 +456,7 @@ export default function ManageProducts() {
                     </td>
                     <td className="px-4 py-3">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(product.status)}`}>
-                        {product.status.charAt(0).toUpperCase() + product.status.slice(1)}
+                        {/* {product.status.charAt(0).toUpperCase() + product.status.slice(1)} */}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-gray-300">{product.sales}</td>
@@ -451,7 +512,8 @@ export default function ManageProducts() {
                     </td>
                   </tr>
                 );
-              })}
+              })
+              }
             </tbody>
           </table>
         </div>

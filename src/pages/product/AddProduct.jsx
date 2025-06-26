@@ -11,8 +11,12 @@ import {
   Tag,
   FileText
 } from 'lucide-react';
+import {addProductRequest} from "../../features/product/productSlice";
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function AddProduct() {
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -50,6 +54,7 @@ export default function AddProduct() {
   };
 
   const handleImageUpload = (e) => {
+
     const files = Array.from(e.target.files);
     files.forEach(file => {
       const reader = new FileReader();
@@ -57,7 +62,8 @@ export default function AddProduct() {
         setImages(prev => [...prev, {
           id: Date.now() + Math.random(),
           url: event.target.result,
-          name: file.name
+          name: file.name,
+          file: file
         }]);
       };
       reader.readAsDataURL(file);
@@ -111,13 +117,38 @@ export default function AddProduct() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Product data:', { ...formData, images });
-      alert('Product added successfully!');
-      setIsLoading(false);
-    }, 2000);
+
+    const data = new FormData();
+
+    // Append simple fields
+    data.append("name", formData.name);
+    data.append("description", formData.description);
+    data.append("category", formData.category);
+    data.append("price", formData.price);
+    data.append("discountPrice", formData.discountPrice);
+    data.append("sku", formData.sku);
+    data.append("stock", formData.stock);
+    data.append("status", formData.status);
+
+    // Append tags (assuming an array of strings)
+    formData.tags.forEach((tag, index) => {
+      data.append(`tags[${index}]`, tag);
+    });
+
+    // Append specifications (array of key-value objects)
+    formData.specifications.forEach((spec, index) => {
+      data.append(`specifications[${index}][key]`, spec.key);
+      data.append(`specifications[${index}][value]`, spec.value);
+    });
+
+    // Append images
+    images.forEach((imageObj) => {
+      if (imageObj.file) {
+        data.append("images", imageObj.file);
+      }
+    });
+
+    dispatch(addProductRequest(data));
   };
 
   return (

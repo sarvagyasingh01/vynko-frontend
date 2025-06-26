@@ -8,15 +8,19 @@ import {
   LogOut, 
   ChevronDown 
 } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../features/auth/authSlice';
 
 export default function TopNavbar({ toggleSidebar, isSidebarOpen }) {
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.auth);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [notifications] = useState(3); // Example notification count
 
   const profileMenuItems = [
     { icon: User, label: 'Profile', action: () => console.log('Profile clicked') },
     { icon: Settings, label: 'Settings', action: () => console.log('Settings clicked') },
-    { icon: LogOut, label: 'Logout', action: () => console.log('Logout clicked') }
+    { icon: LogOut, label: 'Logout', action: () => dispatch(logout()) }
   ];
 
   return (

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';  
 import { 
   TrendingUp, 
   Users, 
@@ -6,8 +7,17 @@ import {
   Activity,
   Package
 } from 'lucide-react';
+import { useDispatch, useSelector } from "react-redux";
+import { getUserStatsRequest } from '../../features/user/userSlice';
 
 export default function Dashboard() {
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector((state) => state.userStats);
+
+  useEffect(() => {
+    dispatch(getUserStatsRequest({}));
+  }, [dispatch]);
+
   const stats = [
     {
       title: 'Total Revenue',
@@ -35,7 +45,7 @@ export default function Dashboard() {
     },
     {
       title: 'Active Users',
-      value: '2,845',
+      value: data?.totalUsers || 0,
       change: '+12.5%',
       trend: 'up',
       icon: Users,

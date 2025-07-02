@@ -130,13 +130,12 @@ export default function ManageProducts() {
   };
 
   useEffect(() => {
-    console.log("Dispatching getAllProductsRequest...");
     dispatch(getAllProductsRequest({
-      page: 1,
-      pageSize: 10,
-      searchTerm: ""
+      page,
+      pageSize,
+      searchTerm: searchTerm
     }));
-  }, [dispatch]);
+  }, [dispatch, searchTerm]);
 
   //  useEffect(() => {
   //   const fetchProducts = async () => {
@@ -177,8 +176,8 @@ export default function ManageProducts() {
   };
 
   const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.sku.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = product?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product?.sku?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = !filterCategory || product.category === filterCategory;
     const matchesStatus = !filterStatus || product.status === filterStatus;
     

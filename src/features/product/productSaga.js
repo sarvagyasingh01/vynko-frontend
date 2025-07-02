@@ -41,7 +41,6 @@ function* handleGetAllProducts(action) {
       },
     };
     const response = yield call(getAllProductsAPI, action.payload, config);
-    console.log("Response data", response.data.data)
     yield put(getAllProductsSuccess(response.data.data));
   } catch (error) {
     yield put(

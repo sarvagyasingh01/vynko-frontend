@@ -15,9 +15,10 @@ const authSlice = createSlice({
     },
     adminLoginSuccess: (state, action) => {
       state.loading = false;
-      state.user = action.payload;
-      state.token = action.payload.data.token;
-      localStorage.setItem('admin_token',action.payload.data.token);
+      const { token, ...user } = action.payload.data;
+      state.user = user;
+      state.token = token;
+      localStorage.setItem('admin_token', token);
     },
     adminLoginFailure: (state, action) => {
       state.loading = false;

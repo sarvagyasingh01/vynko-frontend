@@ -10,7 +10,6 @@ function* handleAdminLogin(action){
     try{
         const response = yield call(loginAPI,action.payload);
         yield put(adminLoginSuccess(response.data));
-        window.location.reload()
     }
     catch(error){
         const message = error.response?.data?.message || 'Login Failed';

@@ -37,16 +37,60 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+
+    // UPDATE PRODUCT
+    updateProductRequest: (state) => {
+      state.loading = true;
+      state.success = false;
+      state.error = null;
+    },
+    updateProductSuccess: (state) => {
+      state.loading = false;
+      state.success = true;
+    },
+    updateProductFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    //UPDATE PRODUCT STATUS
+    changeProductStatusRequest: (state) => {
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    },
+    changeProductStatusSuccess: (state, action) => {
+      state.loading = false;
+      state.success = true;
+    },
+    changeProductStatusFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+      state.success = false;
+    },
+
+    //RESET STATE
+    resetProductState: (state) => {
+      state.success = false;
+      state.error = null;
+    },
   },
 });
 
-export const { 
+export const {
   addProductRequest,
-  addProductSuccess, 
+  addProductSuccess,
   addProductFailure,
   getAllProductsRequest,
   getAllProductsSuccess,
   getAllProductsFailure,
-  } = productSlice.actions;
+  updateProductRequest,
+  updateProductSuccess,
+  updateProductFailure,
+  changeProductStatusRequest,
+  changeProductStatusSuccess,
+  changeProductStatusFailure,
+  resetProductState,
+} = productSlice.actions;
 
 export default productSlice.reducer;

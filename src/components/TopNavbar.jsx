@@ -70,7 +70,7 @@ export default function TopNavbar({ toggleSidebar, isSidebarOpen }) {
               <User className="w-4 h-4 text-black" />
             </div>
             <div className="hidden md:block text-left">
-              <p className="text-sm font-medium text-white">John Doe</p>
+              <p className="text-sm font-medium text-white">Admin</p>
               <p className="text-xs text-gray-400">Administrator</p>
             </div>
             <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />

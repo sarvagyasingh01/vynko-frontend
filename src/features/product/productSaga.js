@@ -1,24 +1,91 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import axios from '../../utils/axios';
-import { addProductFailure, addProductRequest, addProductSuccess, getAllProductsFailure, getAllProductsRequest, getAllProductsSuccess } from "./productSlice";
+import axios from "../../utils/axios";
+import {
+  addProductFailure,
+  addProductRequest,
+  addProductSuccess,
+  changeProductStatusFailure,
+  changeProductStatusRequest,
+  changeProductStatusSuccess,
+  getAllProductsFailure,
+  getAllProductsRequest,
+  getAllProductsSuccess,
+  updateProductFailure,
+  updateProductRequest,
+  updateProductSuccess,
+} from "./productSlice";
 
 //Add Product API
-function addProductAPI(payload, config){
-    return axios.post("/private/add-product", payload, config, {withCredentials:true});
-
+function addProductAPI(payload, config) {
+  return axios.post("/private/add-product", payload, {
+    ...config,
+    withCredentials: true,
+  });
 }
 
 function* handleAddProduct(action) {
   try {
-    const token = localStorage.getItem("admin_token")
-    const response = yield call(addProductAPI,action.payload,{
-        headers: {
-            "x-auth-token": token,
-        },
+    const token = localStorage.getItem("admin_token");
+    const response = yield call(addProductAPI, action.payload, {
+      headers: {
+        "x-auth-token": token,
+      },
     });
     yield put(addProductSuccess(response.data));
   } catch (error) {
-    yield put(addProductFailure(error.response?.data?.message || "Error adding product"));
+    yield put(
+      addProductFailure(error.response?.data?.message || "Error adding product")
+    );
+  }
+}
+
+//Update Product
+function updateProductAPI(payload, config) {
+  return axios.post("/private/update-product", payload, {
+    ...config,
+    withCredentials: true,
+  });
+}
+
+function* handleUpdateProduct(action) {
+  try {
+    const token = localStorage.getItem("admin_token");
+
+    const response = yield call(updateProductAPI, action.payload, {
+      headers: {
+        "x-auth-token": token,
+      },
+    });
+
+    yield put(updateProductSuccess(response.data));
+  } catch (error) {
+    yield put(
+      updateProductFailure(
+        error.response?.data?.message || "Error updating product"
+      )
+    );
+  }
+}
+
+//Change Product Status
+function changeProductStatusAPI(payload, config) {
+  return axios.post('/private/change-product-status', payload, {
+    ...config,
+    withCredentials: true,
+  });
+}
+
+function* handleChangeProductStatus(action) {
+  try {
+    const token = localStorage.getItem('admin_token');
+    const response = yield call(changeProductStatusAPI, action.payload, {
+      headers: { 'x-auth-token': token },
+    });
+    yield put(changeProductStatusSuccess(response.data));
+  } catch (error) {
+    yield put(
+      changeProductStatusFailure(error.response?.data?.message || 'Error changing product status')
+    );
   }
 }
 
@@ -27,10 +94,9 @@ function getAllProductsAPI(params, config) {
   return axios.get("private/get-products", {
     params,
     ...config,
-    withCredentials: true
+    withCredentials: true,
   });
 }
-
 
 function* handleGetAllProducts(action) {
   try {
@@ -44,13 +110,16 @@ function* handleGetAllProducts(action) {
     yield put(getAllProductsSuccess(response.data.data));
   } catch (error) {
     yield put(
-      getAllProductsFailure(error.response?.data?.message || "Error fetching products")
+      getAllProductsFailure(
+        error.response?.data?.message || "Error fetching products"
+      )
     );
   }
 }
 
-
-export function* wathchProductSagas() {
+export function* watchProductSagas() {
   yield takeLatest(addProductRequest.type, handleAddProduct);
   yield takeLatest(getAllProductsRequest.type, handleGetAllProducts);
+  yield takeLatest(updateProductRequest.type, handleUpdateProduct);
+  yield takeLatest(changeProductStatusRequest.type, handleChangeProductStatus);
 }

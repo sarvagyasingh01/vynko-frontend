@@ -2,7 +2,7 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import axios from '../../utils/axios';
 import { getUserStatsFailure, getUserStatsRequest, getUserStatsSuccess } from "./userSlice";
 
-//Get All Products
+//Get User Stats
 function getUserStatsAPI(config) {
   return axios.get("private/get-user-stats", {
     // params,
@@ -32,6 +32,6 @@ function* handleGetUserStats(action) {
 }
 
 
-export function* wathchUserStatsSagas() {
+export function* watchUserStatsSagas() {
   yield takeLatest(getUserStatsRequest.type, handleGetUserStats);
 }

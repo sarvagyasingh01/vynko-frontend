@@ -4,7 +4,6 @@ const userSlice = createSlice({
   name: "userStats",
   initialState: {
     loading: false,
-    data: null,
     success: false,
     error: null,
   },
@@ -17,6 +16,7 @@ const userSlice = createSlice({
     getUserStatsSuccess: (state, action) => {
       state.loading = false;
       state.data = action.payload;
+      state.success = true
     },
     getUserStatsFailure: (state, action) => {
       state.loading = false;
@@ -26,9 +26,6 @@ const userSlice = createSlice({
 });
 
 export const { 
-  addProductRequest,
-  addProductSuccess, 
-  addProductFailure,
   getUserStatsRequest,
   getUserStatsSuccess,
   getUserStatsFailure,

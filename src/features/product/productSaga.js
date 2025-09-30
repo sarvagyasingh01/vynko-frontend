@@ -7,6 +7,12 @@ import {
   changeProductStatusFailure,
   changeProductStatusRequest,
   changeProductStatusSuccess,
+  deleteProductFailure,
+  deleteProductRequest,
+  deleteProductSuccess,
+  editProductImagesFailure,
+  editProductImagesRequest,
+  editProductImagesSuccess,
   getAllProductsFailure,
   getAllProductsRequest,
   getAllProductsSuccess,
@@ -69,7 +75,7 @@ function* handleUpdateProduct(action) {
 
 //Change Product Status
 function changeProductStatusAPI(payload, config) {
-  return axios.post('/private/change-product-status', payload, {
+  return axios.post("/private/change-product-status", payload, {
     ...config,
     withCredentials: true,
   });
@@ -77,14 +83,75 @@ function changeProductStatusAPI(payload, config) {
 
 function* handleChangeProductStatus(action) {
   try {
-    const token = localStorage.getItem('admin_token');
+    const token = localStorage.getItem("admin_token");
     const response = yield call(changeProductStatusAPI, action.payload, {
-      headers: { 'x-auth-token': token },
+      headers: { "x-auth-token": token },
     });
     yield put(changeProductStatusSuccess(response.data));
   } catch (error) {
     yield put(
-      changeProductStatusFailure(error.response?.data?.message || 'Error changing product status')
+      changeProductStatusFailure(
+        error.response?.data?.message || "Error changing product status"
+      )
+    );
+  }
+}
+
+// Edit Product Images API
+function editProductImagesAPI(payload, productId, config) {
+  return axios.post(
+    `/private/update-product-images?productId=${productId}`,
+    payload,
+    {
+      ...config,
+      withCredentials: true,
+    }
+  );
+}
+
+function* handleEditProductImages(action) {
+  try {
+    const token = localStorage.getItem("admin_token");
+    const { productId, formData } = action.payload;
+
+    const response = yield call(editProductImagesAPI, formData, productId, {
+      headers: {
+        "x-auth-token": token,
+      },
+    });
+
+    yield put(editProductImagesSuccess(response.data));
+  } catch (error) {
+    yield put(
+      editProductImagesFailure(
+        error.response?.data?.message || "Error editing product images"
+      )
+    );
+  }
+}
+
+//Delete Product
+function deleteProductAPI(payload, config) {
+  return axios.post("/private/delete-product", payload, {
+    ...config,
+    withCredentials: true,
+  });
+}
+
+function* handleDeleteProduct(action) {
+  try {
+    const token = localStorage.getItem("admin_token");
+    const response = yield call(deleteProductAPI, action.payload, {
+      headers: {
+        "x-auth-token": token,
+      },
+    });
+    yield put(deleteProductSuccess(response.data));
+  } catch (error) {
+    yield put(
+      deleteProductFailure(
+        error.response?.data?.message || "Error deleting product"
+      )
     );
   }
 }
@@ -122,4 +189,6 @@ export function* watchProductSagas() {
   yield takeLatest(getAllProductsRequest.type, handleGetAllProducts);
   yield takeLatest(updateProductRequest.type, handleUpdateProduct);
   yield takeLatest(changeProductStatusRequest.type, handleChangeProductStatus);
+  yield takeLatest(deleteProductRequest.type, handleDeleteProduct);
+  yield takeLatest(editProductImagesRequest.type, handleEditProductImages);
 }

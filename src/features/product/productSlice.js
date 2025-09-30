@@ -3,6 +3,26 @@ import { createSlice } from "@reduxjs/toolkit";
 const productSlice = createSlice({
   name: "product",
   initialState: {
+    // ADD PRODUCT
+    addProductSuccess: false,
+    addProductError: null,
+
+    // UPDATE PRODUCT
+    updateProductSuccess: false,
+    updateProductError: null,
+
+    // EDIT PRODUCT IMAGES
+    editProductImagesSuccess: false,
+    editProductImagesError: null,
+
+    // CHANGE STATUS
+    changeStatusSuccess: false,
+    changeStatusError: null,
+
+    //DELETE PRODUCT
+    deleteProductSuccess: false,
+    deleteProductError: null,
+
     loading: false,
     success: false,
     error: null,
@@ -41,32 +61,63 @@ const productSlice = createSlice({
     // UPDATE PRODUCT
     updateProductRequest: (state) => {
       state.loading = true;
-      state.success = false;
-      state.error = null;
+      state.updateProductSuccess = false;
+      state.updateProductError = null;
     },
     updateProductSuccess: (state) => {
       state.loading = false;
-      state.success = true;
+      state.updateProductSuccess = true;
     },
     updateProductFailure: (state, action) => {
       state.loading = false;
-      state.error = action.payload;
+      state.updateProductError = action.payload;
+    },
+
+    // EDIT PRODUCT IMAGES
+    editProductImagesRequest: (state) => {
+      state.loading = true;
+      state.editProductImagesSuccess = false;
+      state.editProductImagesError = null;
+    },
+    editProductImagesSuccess: (state) => {
+      state.loading = false;
+      state.editProductImagesSuccess = true;
+    },
+    editProductImagesFailure: (state, action) => {
+      state.loading = false;
+      state.editProductImagesError = action.payload;
     },
 
     //UPDATE PRODUCT STATUS
     changeProductStatusRequest: (state) => {
       state.loading = true;
-      state.error = null;
-      state.success = false;
+      state.changeStatusError = null;
+      state.changeStatusSuccess = false;
     },
     changeProductStatusSuccess: (state, action) => {
       state.loading = false;
-      state.success = true;
+      state.changeStatusSuccess = true;
     },
     changeProductStatusFailure: (state, action) => {
       state.loading = false;
-      state.error = action.payload;
-      state.success = false;
+      state.changeStatusError = action.payload;
+      state.changeStatusSuccess = false;
+    },
+
+    //DELET PRODUCT
+    deleteProductRequest: (state) => {
+      state.loading = true;
+      state.deleteProductError = null;
+      state.deleteProductSuccess = false;
+    },
+    deleteProductSuccess: (state, action) => {
+      state.loading = false;
+      state.deleteProductSuccess = true;
+    },
+    deleteProductFailure: (state, action) => {
+      state.loading = false;
+      state.deleteProductError = action.payload;
+      state.deleteProductSuccess = false;
     },
 
     //RESET STATE
@@ -87,9 +138,15 @@ export const {
   updateProductRequest,
   updateProductSuccess,
   updateProductFailure,
+  editProductImagesRequest,
+  editProductImagesSuccess,
+  editProductImagesFailure,
   changeProductStatusRequest,
   changeProductStatusSuccess,
   changeProductStatusFailure,
+  deleteProductRequest,
+  deleteProductSuccess,
+  deleteProductFailure,
   resetProductState,
 } = productSlice.actions;
 

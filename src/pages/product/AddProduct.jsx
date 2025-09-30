@@ -27,14 +27,14 @@ export default function AddProduct() {
     price: "",
     discountPrice: "",
     stock: "",
-    status: false,
+    active: false,
     sizes: {
       S: 0,
       M: 0,
       L: 0,
       XL: 0,
       XXL: 0,
-      XXX: 0,
+      XXXL: 0,
     },
     tags: [],
     specifications: [{ key: "", value: "" }],
@@ -243,7 +243,7 @@ export default function AddProduct() {
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-200 mb-2">
                   Regular Price
@@ -255,7 +255,7 @@ export default function AddProduct() {
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200"
                   placeholder="0.00"
-                  step="0.01"
+                  step="1"
                 />
               </div>
 
@@ -270,11 +270,11 @@ export default function AddProduct() {
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200"
                   placeholder="0.00"
-                  step="0.01"
+                  step="1"
                 />
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-gray-200 mb-2">
                   Stock Quantity
                 </label>
@@ -286,7 +286,7 @@ export default function AddProduct() {
                   className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200"
                   placeholder="0"
                 />
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -395,8 +395,8 @@ export default function AddProduct() {
               Product Status
             </h3>
             <select
-              name="status"
-              value={formData.status}
+              name="active"
+              value={formData.active}
               onChange={handleInputChange}
               className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-200"
             >

@@ -4,6 +4,7 @@ import TopNavbar from '../../components/TopNavbar';
 import Dashboard from '../dashboard/Dashboard';
 import AddProduct from '../product/AddProduct';
 import ManageProducts from '../product/ManageProducts';
+import ManageBanners from '../assets/ManageBanners';
 
 export default function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -21,6 +22,8 @@ export default function AdminLayout() {
         return <AddProduct />;
       case 'manage-product':
         return <ManageProducts />;
+      case 'manage-banners':
+        return <ManageBanners/>;
       case 'orders':
         return (
           <div className="p-6">

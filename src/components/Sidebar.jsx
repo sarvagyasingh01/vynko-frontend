@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 
 export default function Sidebar({ currentPage, setCurrentPage }) {
-  const [isProductOpen, setIsProductOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(null); // Track which dropdown is open
 
   const menuItems = [
     {
@@ -28,6 +28,16 @@ export default function Sidebar({ currentPage, setCurrentPage }) {
       ]
     },
     {
+      id: 'assets',
+      label: 'Assets',
+      icon: Package,
+      hasDropdown: true,
+      subItems: [
+        { id: 'manage-links', label: 'Manage Links', path: '/link/manage' },
+        { id: 'manage-banners', label: 'Manage Banners', path: '/banner/manage' }
+      ]
+    },
+    {
       id: 'orders',
       label: 'Orders',
       icon: ShoppingBag,
@@ -36,15 +46,19 @@ export default function Sidebar({ currentPage, setCurrentPage }) {
   ];
 
   const handleItemClick = (itemId) => {
-    if (itemId === 'product') {
-      setIsProductOpen(!isProductOpen);
+    const item = menuItems.find(i => i.id === itemId);
+    if (item.hasDropdown) {
+      // Toggle dropdown open/close
+      setOpenMenu(openMenu === itemId ? null : itemId);
     } else {
-      setCurrentPage(itemId); // This will change the page in AdminLayout
+      setCurrentPage(itemId);
+      setOpenMenu(null); // Close any open dropdown when navigating
     }
   };
 
   const handleSubItemClick = (subItemId) => {
-    setCurrentPage(subItemId); // This will change the page in AdminLayout
+    setCurrentPage(subItemId);
+    setOpenMenu(null); // Close dropdown after selecting subitem
   };
 
   return (
@@ -70,7 +84,7 @@ export default function Sidebar({ currentPage, setCurrentPage }) {
             <button
               onClick={() => handleItemClick(item.id)}
               className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200 group ${
-                currentPage === item.id || (item.hasDropdown && isProductOpen)
+                currentPage === item.id || openMenu === item.id
                   ? 'bg-white/10 text-white border border-white/20'
                   : 'text-gray-300 hover:bg-white/5 hover:text-white'
               }`}
@@ -81,7 +95,7 @@ export default function Sidebar({ currentPage, setCurrentPage }) {
               </div>
               {item.hasDropdown && (
                 <div className="transition-transform duration-200">
-                  {isProductOpen ? (
+                  {openMenu === item.id ? (
                     <ChevronDown className="w-4 h-4" />
                   ) : (
                     <ChevronRight className="w-4 h-4" />
@@ -91,7 +105,7 @@ export default function Sidebar({ currentPage, setCurrentPage }) {
             </button>
 
             {/* Dropdown Sub Items */}
-            {item.hasDropdown && isProductOpen && (
+            {item.hasDropdown && openMenu === item.id && (
               <div className="mt-2 ml-4 space-y-1">
                 {item.subItems.map((subItem) => (
                   <button

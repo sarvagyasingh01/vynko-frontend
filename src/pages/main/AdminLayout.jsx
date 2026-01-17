@@ -42,22 +42,36 @@ export default function AdminLayout() {
     <div className="flex h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 overflow-hidden">
       {/* Sidebar - Desktop */}
       <div className="hidden lg:block">
-        <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+        <Sidebar
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          onClose={toggleSidebar}
+        />
+
       </div>
 
       {/* Sidebar - Mobile */}
       {isSidebarOpen && (
         <div className="lg:hidden fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black/50" onClick={toggleSidebar}></div>
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={toggleSidebar}
+          ></div>
+
           <div className="relative">
-            <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            <Sidebar
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              onClose={toggleSidebar}
+            />
           </div>
         </div>
       )}
 
+
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top Navbar */}
+        { }
         <TopNavbar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
         
         {/* Main Content */}

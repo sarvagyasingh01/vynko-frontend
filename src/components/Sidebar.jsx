@@ -7,7 +7,7 @@ import {
   ChevronRight 
 } from 'lucide-react';
 
-export default function Sidebar({ currentPage, setCurrentPage }) {
+export default function Sidebar({ currentPage, setCurrentPage, onClose }) {
   const [openMenu, setOpenMenu] = useState(null); // Track which dropdown is open
 
   const menuItems = [
@@ -47,19 +47,23 @@ export default function Sidebar({ currentPage, setCurrentPage }) {
 
   const handleItemClick = (itemId) => {
     const item = menuItems.find(i => i.id === itemId);
+
     if (item.hasDropdown) {
-      // Toggle dropdown open/close
       setOpenMenu(openMenu === itemId ? null : itemId);
     } else {
       setCurrentPage(itemId);
-      setOpenMenu(null); // Close any open dropdown when navigating
+      setOpenMenu(null);
+      onClose?.();
     }
   };
 
+
   const handleSubItemClick = (subItemId) => {
     setCurrentPage(subItemId);
-    setOpenMenu(null); // Close dropdown after selecting subitem
+    setOpenMenu(null);
+    onClose?.();
   };
+
 
   return (
     <div className="h-screen w-64 bg-gradient-to-b from-black via-gray-900 to-gray-800 border-r border-white/10 flex flex-col">
